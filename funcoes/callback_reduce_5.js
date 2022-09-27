@@ -11,3 +11,20 @@ const getTotal = total => total.qtde * total.preco
 const somaTotal = (acc, el) => acc + el
 console.log(carrinho.map(getTotal)
 .reduce(somaTotal, 0))
+
+Array.prototype.meuReduce = function (fn, inicial) {
+    let acc = inicial
+    for(let i = 0; i < this.length; i++){
+        if(!acc && i === 0) {
+            acc = this[i]
+            continue
+        }
+
+        acc = fn(acc, this[i], i, this)
+
+        return acc
+    }
+}
+
+console.log(carrinho.map(getTotal)
+.meuReduce(somaTotal, 0))
