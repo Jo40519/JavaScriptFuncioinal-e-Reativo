@@ -4,7 +4,6 @@ const path = require("path");
 function lerDireitorio(caminho) {
     return new Promise((resolve, reject) => {
         try {
-
             let lerArquivo = fs.readdirSync(caminho);
             lerArquivo = lerArquivo.map((arquivo) => path.join(caminho, arquivo));
             resolve(lerArquivo)
@@ -33,9 +32,75 @@ function elementosTerminadosCom(array, padrao){
     return array.filter(el => el.endsWith(padrao))
 }
 
+function removerSeVazio(array){
+    return array.filter(element => element.trim())
+}
+
+function removerSeInlcuir(padraoTextual) {
+    return function(array){
+        return array.filter(element => !element.includes(padraoTextual))
+
+    }
+}
+
+function removerSeApenasNumero(array) {
+    return array.filter(element => {
+        const num = parseInt(element.trim())
+        return num !== num
+    })
+}
+
+function removerSimbolos(simbolos) {
+    return function (array) {
+        return array.map(element => {
+            let textoSemSimbolos = element
+            simbolos.forEach(simbolo => {
+                textoSemSimbolos = textoSemSimbolos.split(simbolo).join('')
+            })
+            return textoSemSimbolos
+        })
+    }
+}
+
+const mesclarConteudos = conteudos => conteudos.join(' ')
+
+function separarTextoPor(simbolo){
+    return function(texto) {
+        return texto.split(simbolo)
+    }
+}
+
+function agruparPalavras(palavras){
+    return Object.values(palavras.reduce((acc, palavra) => {
+        const el = palavra.toLowerCase()
+        const qtde = acc[el] ? acc[el].qtde + 1 : 1
+        Object.values(acc[el] = {
+            elemento: el,
+            qtde
+        })
+        return acc
+    }, {}))
+}
+
+function ordernarPorAtributoNumerico(attr, ordem = 'asc') {
+    return function (array) {
+        const asc = (o1, o2) => o1[attr] - o2[attr]
+        const desc = (o1, o2) => o2[attr] - o1[attr]
+        return array.sort(ordem === 'asc' ? asc : desc)
+    }
+}
+
 module.exports = {
     lerDireitorio,
     elementosTerminadosCom,
     lerArquivo,
-    lerArquivos
+    lerArquivos,
+    removerSeVazio,
+    removerSeInlcuir,
+    removerSeApenasNumero,
+    removerSimbolos,
+    mesclarConteudos,
+    separarTextoPor,
+    agruparPalavras,
+    ordernarPorAtributoNumerico
 };
