@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-undef
 const fs = require("fs");
+// eslint-disable-next-line no-undef
 const path = require("path");
 
 function lerDireitorio(caminho) {
@@ -53,11 +55,9 @@ function removerSeApenasNumero(array) {
 function removerSimbolos(simbolos) {
     return function (array) {
         return array.map(element => {
-            let textoSemSimbolos = element
-            simbolos.forEach(simbolo => {
-                textoSemSimbolos = textoSemSimbolos.split(simbolo).join('')
-            })
-            return textoSemSimbolos
+            return simbolos.reduce((acc, simbolo) => {
+                return acc.split(simbolo).join('')
+            }, element)
         })
     }
 }
@@ -90,6 +90,7 @@ function ordernarPorAtributoNumerico(attr, ordem = 'asc') {
     }
 }
 
+// eslint-disable-next-line no-undef
 module.exports = {
     lerDireitorio,
     elementosTerminadosCom,

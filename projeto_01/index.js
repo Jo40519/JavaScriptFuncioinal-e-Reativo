@@ -1,6 +1,9 @@
+// eslint-disable-next-line no-undef
 const path = require('path')
+// eslint-disable-next-line no-undef
 const fn = require('./funcoes')
 
+// eslint-disable-next-line no-undef
 const caminho = path.join(__dirname, '..', 'dados', 'legendas')
 
 const simbolos = [

@@ -1,0 +1,23 @@
+{
+  "name": "javascriptfuncioinal-e-reativo",
+  "version": "1.0.0",
+  "description": "Repositório com o intuito de estudar JavaScript Funcional e Reativo",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo/issues"
+  },
+  "homepage": "https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo#readme",
+  "devDependencies": {
+    "eslint": "^8.25.0"
+  }
+}
