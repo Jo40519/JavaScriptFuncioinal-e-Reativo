@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo/issues"
   },
-  "homepage": "https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo#readme"
+  "homepage": "https://github.com/Jo40519/JavaScriptFuncioinal-e-Reativo#readme",
+  "dependencies": {
+    "rxjs": "^7.5.7",
+    "xmlhttprequest": "^1.8.0"
+  }
 }
