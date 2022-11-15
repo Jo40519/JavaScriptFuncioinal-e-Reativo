@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-undef
 const path = require('path')
-const { toArray, map } = require('rxjs')
+const { toArray, map, groupBy, mergeMap, reduce } = require('rxjs')
 // eslint-disable-next-line no-undef
 const fn = require('./funcoes')
 const _ = require('lodash')
@@ -22,8 +22,10 @@ const simbolos = [
         fn.separarTextoPor(' '),
         fn.removerElementoSeVazio(),
         fn.removerSeApenasNumero(),
+        groupBy(el => el),
+        mergeMap(grupo => grupo.pipe(toArray())),
+        map(palavras => ({elemento: palavras[0], qtde: palavras.length})),
         toArray(),
-        fn.agruparElementos(),
         map(array => _.sortBy(array, el => -el.qtde))
     )
     .subscribe(console.log)

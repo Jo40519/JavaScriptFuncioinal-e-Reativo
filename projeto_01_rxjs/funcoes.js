@@ -26,6 +26,21 @@ function lerArquivo(caminho){
     })
 }
 
+function lerArquivo() {
+    return createPipeableOperator(subs => ({
+        next(caminho) {
+            try {
+                const conteudo = fs.readFileSync(caminho, {encoding: 'utf-8'})
+                subs.next(conteudo.toString())
+            } catch (e) {
+                subs.error(e)
+            }
+
+
+        }
+    }))
+}
+
 function lerArquivos(caminhos) {
     return Promise.all(caminhos.map(caminho => lerArquivo(caminho)))
 }
@@ -40,12 +55,26 @@ function elementosTerminadosCom(padraoTextual) {
     }))
 }
 
-// function elementosTerminadosCom(array, padrao){
-//     return array.filter(el => el.endsWith(padrao))
-// }
+function removerElementoSeVazio() {
+    return createPipeableOperator(subs => ({
+        next(texto) {
+            if(texto.trim()){
+                subs.next(texto)
+            }
+        }
+    }))
+}
 
-function removerSeVazio(array){
-    return array.filter(element => element.trim())
+function removerSeApenasNumero() {
+    return createPipeableOperator(subs => ({
+        next(texto) {
+            const num = parseInt(texto.trim())
+
+            if(num !== num) {
+                subs.next(texto)
+            }
+        }
+    }))
 }
 
 function removerSeInlcuir(padraoTextual) {
@@ -55,49 +84,41 @@ function removerSeInlcuir(padraoTextual) {
     }
 }
 
-function removerSeApenasNumero(array) {
-    return array.filter(element => {
-        const num = parseInt(element.trim())
-        return num !== num
-    })
-}
-
 function removerSimbolos(simbolos) {
-    return function (array) {
-        return array.map(element => {
-            return simbolos.reduce((acc, simbolo) => {
+    return createPipeableOperator(subs => ({
+        next(texto) {
+            const textoSemSimbolos =  simbolos.reduce((acc, simbolo) => {
                 return acc.split(simbolo).join('')
-            }, element)
-        })
-    }
+            }, texto)
+            subs.next(textoSemSimbolos)
+        }
+    }))
 }
 
-const mesclarConteudos = conteudos => conteudos.join(' ')
-
-function separarTextoPor(simbolo){
-    return function(texto) {
-        return texto.split(simbolo)
-    }
+function separarTextoPor(simbolo) {
+    return createPipeableOperator(subs => ({
+        next(texto) {
+            texto.split(simbolo).forEach(parte => {
+                subs.next(parte)
+            })
+        }
+    }))
 }
-
-function agruparPalavras(palavras){
-    return Object.values(palavras.reduce((acc, palavra) => {
-        const el = palavra.toLowerCase()
-        const qtde = acc[el] ? acc[el].qtde + 1 : 1
-        Object.values(acc[el] = {
-            elemento: el,
-            qtde
-        })
-        return acc
-    }, {}))
-}
-
-function ordernarPorAtributoNumerico(attr, ordem = 'asc') {
-    return function (array) {
-        const asc = (o1, o2) => o1[attr] - o2[attr]
-        const desc = (o1, o2) => o2[attr] - o1[attr]
-        return array.sort(ordem === 'asc' ? asc : desc)
-    }
+function agruparElementos() {
+    return createPipeableOperator(subs => ({
+        next(palavras) {
+            const agrupado = Object.values(palavras.reduce((acc, palavra) => {
+                const el = palavra.toLowerCase()
+                const qtde = acc[el] ? acc[el].qtde + 1 : 1
+                Object.values(acc[el] = {
+                    elemento: el,
+                    qtde
+                })
+                return acc
+            }, {}))
+            subs.next(agrupado)
+        }
+    }))
 }
 
 function composicao(...fns) {
@@ -130,14 +151,11 @@ module.exports = {
     lerDireitorio,
     elementosTerminadosCom,
     lerArquivo,
-    lerArquivos,
-    removerSeVazio,
+    removerElementoSeVazio,
     removerSeInlcuir,
     removerSeApenasNumero,
     removerSimbolos,
-    mesclarConteudos,
     separarTextoPor,
-    agruparPalavras,
-    ordernarPorAtributoNumerico,
+    agruparElementos,
     composicao
 };
